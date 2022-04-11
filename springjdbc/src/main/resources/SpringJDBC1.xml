@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        https://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <context:component-scan base-package="com.jsm"/>
+    <context:property-placeholder location="classpath*:DS.properties"/>
+    <beans>
+        <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+            <property name="driverClassName" value="${druid.driverClassName}"/>
+            <property name="url" value="${druid.url}"/>
+            <property name="name" value="${druid.name}"/>
+            <property name="password" value="${druid.password}"/>
+        </bean>
+        <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+            <property name="dataSource" ref="dataSource"/>
+        </bean>
+        <!--配置事务管理-->
+        <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+            <property name="dataSource" ref="dataSource"/>
+        </bean>
+        <tx:advice id="txadvice">
+            <tx:attributes>
+                <tx:method name="add*" isolation="REPEATABLE_READ" propagation="REQUIRED" timeout="300"
+                           read-only="false"/>
+            </tx:attributes>
+        </tx:advice>
+        <aop:config>
+            <aop:pointcut id="pt" expression="execution(* com.jsm.service.BookService.*(..))"/>
+            <aop:advisor advice-ref="txadvice" pointcut-ref="pt"/>
+        </aop:config>
+
+
+    </beans>
+
+
+</beans>

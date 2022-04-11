@@ -1,0 +1,34 @@
+<?xml version="1.0" enconding="UTF-8"?>
+<configuration scan="true" scanPeriod="1 seconds" debug="false">
+    <!-- ch.qos.logback.core.ConsoleAppender 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%-5level] [%L row] %d{MM-dd HH:mm:ss} [%thread]
+                %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!--    滚动文件-->
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/user.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${logBase}user.%d{yyyyMMddHHmm}.txt</fileNamePattern>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%-5level] [%L row] %d{MM-dd HH:mm:ss} [%thread]
+                %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- 日志级别 ALL INFO ERROR DEBUG TRACE OFF-->
+    <root>
+        <level value="error"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+    <logger name="com" level="DEBUG">
+        <appender-ref ref="file"/>
+    </logger>
+</configuration>

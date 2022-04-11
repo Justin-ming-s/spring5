@@ -1,0 +1,15 @@
+# 项目排除路径
+/springAnnotion/target/
+/springAOP/target/
+/springjdbc/target/
+/springjunit5/target/
+/springlog/target/
+/springshiwu/target/
+/springTest/target/
+/target/
+.idea
+*.iml
+.target
+*.class
+*.rar
+*.zip
